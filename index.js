@@ -29,7 +29,7 @@ function renderMarkdown(markdownText) {
 
 async function fetchAndRender() {
   const response = await fetch(
-    "https://cdn.staticaly.com/gh/unifiedjs/unified/master/readme.md"
+    "https://cdn.staticaly.com/gh/hsribei/content/master/the-new-meat.md"
   );
   const markdownText = await response.text();
   renderMarkdown(markdownText);
