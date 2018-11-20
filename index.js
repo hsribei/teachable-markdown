@@ -28,9 +28,21 @@ function renderMarkdown(markdownText) {
 }
 
 async function fetchAndRender() {
-  const response = await fetch(
-    "https://cdn.staticaly.com/gh/hsribei/content/master/the-new-meat.md?env=dev"
-  );
+  let url = "";
+  try {
+    // const docTitle = "s01e02 - Third Lecture | test-school";
+    const docTitle = document.title;
+    const sectionDirectoryName = docTitle.match(/^(s\d+)e/)[1];
+    const lectureFileName = docTitle.split(/\s*\|\s*/)[0] + ".md";
+    url = `https://cdn.staticaly.com/gh/hsribei/content/master/teachable-gfm-markdown/${sectionDirectoryName}/${lectureFileName}?env=dev`;
+  } catch (e) {
+    console.log("Couldn't parse document title into URL for markdown source:", {
+      docTitle: document.title
+    });
+    url =
+      "https://cdn.staticaly.com/gh/hsribei/content/master/the-new-meat.md?env=dev";
+  }
+  const response = await fetch(url);
   const markdownText = await response.text();
   renderMarkdown(markdownText);
 }
