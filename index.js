@@ -33,7 +33,9 @@ async function fetchAndRender() {
     // const docTitle = "s01e02 - Third Lecture | test-school";
     const docTitle = document.title;
     const sectionDirectoryName = docTitle.match(/^(s\d+)e/)[1];
-    const lectureFileName = docTitle.split(/\s*\|\s*/)[0] + ".md";
+    const lectureFileName = encodeURIComponent(
+      docTitle.split(/\s*\|\s*/)[0] + ".md"
+    );
     url = `https://cdn.staticaly.com/gh/hsribei/content/master/teachable-gfm-markdown/${sectionDirectoryName}/${lectureFileName}?env=dev`;
   } catch (e) {
     console.log("Couldn't parse document title into URL for markdown source:", {
