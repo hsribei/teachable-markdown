@@ -10,12 +10,10 @@ const md2html = unified()
   .use(format)
   .use(html).processSync;
 
+const isLocalhost = window.location.href.startsWith("http://localhost:");
+
 function renderMarkdown(markdownText) {
-  // The current script tag is always the last script tag at the time
-  // of execution, so this is a way to get a reference to the current
-  // script tag's parent. cf: https://stackoverflow.com/a/10312824/
-  const scriptTag = document.scripts[document.scripts.length - 1];
-  const parentTag = scriptTag.parentNode;
+  const parentTag = document.querySelector(".lecture-content");
 
   let markdownDiv = document.getElementById("markdown");
   if (!markdownDiv) {
@@ -27,23 +25,36 @@ function renderMarkdown(markdownText) {
   markdownDiv.innerHTML = String(md2html(markdownText));
 }
 
-async function fetchAndRender() {
+function getUrl() {
   let url = "";
-  try {
-    // const docTitle = "s01e02 - Third Lecture | test-school";
-    const docTitle = document.title;
-    const sectionDirectoryName = docTitle.match(/^(s\d+)e/)[1];
-    const lectureFileName = encodeURIComponent(
-      docTitle.split(/\s*\|\s*/)[0] + ".md"
-    );
-    url = `https://cdn.staticaly.com/gh/hsribei/content/master/teachable-gfm-markdown/${sectionDirectoryName}/${lectureFileName}?env=dev`;
-  } catch (e) {
-    console.log("Couldn't parse document title into URL for markdown source:", {
-      docTitle: document.title
-    });
-    url =
-      "https://cdn.staticaly.com/gh/hsribei/content/master/the-new-meat.md?env=dev";
+
+  if (isLocalhost) {
+    url = "http://localhost:5000/full-gfm.md";
+  } else {
+    try {
+      // const docTitle = "s01e02 - Third Lecture | test-school";
+      const docTitle = document.title;
+      const sectionDirectoryName = docTitle.match(/^(s\d+)e/)[1];
+      const lectureFileName = encodeURIComponent(
+        docTitle.split(/\s*\|\s*/)[0] + ".md"
+      );
+      url = `https://cdn.staticaly.com/gh/hsribei/content/master/teachable-gfm-markdown/${sectionDirectoryName}/${lectureFileName}?env=dev`;
+    } catch (e) {
+      console.log(
+        "Couldn't parse document title into URL for markdown source:",
+        {
+          docTitle: document.title
+        }
+      );
+      url =
+        "https://cdn.staticaly.com/gh/hsribei/content/master/the-new-meat.md?env=dev";
+    }
   }
+  return url;
+}
+
+async function fetchAndRender() {
+  const url = getUrl();
   const response = await fetch(url);
   const markdownText = await response.text();
   renderMarkdown(markdownText);
