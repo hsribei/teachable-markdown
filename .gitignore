@@ -1,2 +1,5 @@
 node_modules
 .cache
+dist/index.html
+dist/teachable-markdown.*.js
+dist/teachable-markdown.*.map
