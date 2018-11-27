@@ -20,6 +20,15 @@ function renderMarkdown(markdownText) {
     markdownDiv = document.createElement("div");
     markdownDiv.id = "markdown";
     parentTag.appendChild(markdownDiv);
+
+    const styleTag = document.createElement("style");
+    styleTag.type = "text/css";
+    styleTag.innerHTML = `
+      #markdown img {
+        max-width: 100%;
+      }
+    `;
+    document.getElementsByTagName("head")[0].appendChild(styleTag);
   }
 
   markdownDiv.innerHTML = String(md2html(markdownText));
