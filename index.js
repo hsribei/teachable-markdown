@@ -27,7 +27,9 @@ function renderMarkdown(markdownText) {
     styleTag.type = "text/css";
     styleTag.innerHTML = `
       #markdown img {
-        max-width: 100%;
+        display: block;
+        max-width: 80%;
+        margin: auto;
       }
     `;
     document.getElementsByTagName("head")[0].appendChild(styleTag);
