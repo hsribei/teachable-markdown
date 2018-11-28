@@ -3,10 +3,12 @@ const markdown = require("remark-parse");
 const remark2rehype = require("remark-rehype");
 const format = require("rehype-format");
 const html = require("rehype-stringify");
+const raw = require("rehype-raw");
 
 const md2html = unified()
   .use(markdown)
-  .use(remark2rehype)
+  .use(remark2rehype, { allowDangerousHTML: true })
+  .use(raw)
   .use(format)
   .use(html).processSync;
 
