@@ -19,16 +19,14 @@ const isLocalhost = window.location.href.startsWith("http://localhost:");
 
 function attachCss() {
   const headTag = document.getElementsByTagName("head")[0];
-  const parentTag = headTag;
 
-  let styleTag = document.getElementById("html-embed-styling");
-  if (!styleTag) {
-    styleTag = document.createElement("style");
-    styleTag.id = "html-embed-styling";
-    styleTag.type = "text/css";
-    parentTag.appendChild(styleTag);
-  }
+  const styleTag = getOrCreateElementById(
+    "html-embed-styling",
+    "style",
+    headTag
+  );
 
+  styleTag.type = "text/css";
   styleTag.innerHTML = `
       #html-embed-div figure {
         display: block;
@@ -78,17 +76,14 @@ function attachCss() {
     `;
 }
 
-function renderHtml(htmlEmbedContent) {
-  const parentTag = contentRootTag;
-
-  let htmlEmbedDiv = document.getElementById("html-embed-div");
-  if (!htmlEmbedDiv) {
-    htmlEmbedDiv = document.createElement("div");
-    htmlEmbedDiv.id = "html-embed-div";
-    parentTag.appendChild(htmlEmbedDiv);
+function getOrCreateElementById(id, tag = "div", parentTag = contentRootTag) {
+  let element = document.getElementById(id);
+  if (!element) {
+    element = document.createElement(tag);
+    element.id = id;
+    parentTag.appendChild(element);
   }
-
-  htmlEmbedDiv.innerHTML = htmlEmbedContent;
+  return element;
 }
 
 function getUrl() {
@@ -136,7 +131,8 @@ async function fetchHtmlEmbedContent() {
   try {
     const htmlEmbedContent = await fetchHtmlEmbedContent();
     // await sleep(5000);
-    renderHtml(htmlEmbedContent);
+    const htmlEmbedDiv = getOrCreateElementById("html-embed-div");
+    htmlEmbedDiv.innerHTML = htmlEmbedContent;
   } catch (e) {
     console.error(e);
   } finally {
