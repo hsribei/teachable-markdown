@@ -5,11 +5,17 @@ const spinner = new Spinner().spin();
 // The current script tag is always the last script tag at the time
 // of execution, so this is a way to get a reference to the current
 // script tag's parent. cf: https://stackoverflow.com/a/10312824/
-const thisScriptTag = document.scripts[document.scripts.length - 1];
+const thisScriptElement = document.scripts[document.scripts.length - 1];
 
-const contentRootTag = document.querySelector(".lecture-content");
+const lectureContentElement = document.querySelector(".lecture-content");
 
-contentRootTag.appendChild(spinner.el);
+
+const lectureAttachmentSpinnerElement = getOrCreateElementById(
+  "lecture-attachment-spinner",
+  "div",
+  lectureContentElement
+);
+lectureAttachmentSpinnerElement.appendChild(spinner.el);
 
 const isLocalhost = window.location.href.startsWith("http://localhost:");
 
@@ -76,7 +82,11 @@ function attachCss() {
     `;
 }
 
-function getOrCreateElementById(id, tag = "div", parentTag = contentRootTag) {
+function getOrCreateElementById(
+  id,
+  tag = "div",
+  parentTag = lectureContentElement
+) {
   let element = document.getElementById(id);
   if (!element) {
     element = document.createElement(tag);
