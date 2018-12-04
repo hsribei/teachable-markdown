@@ -112,7 +112,6 @@ function main() {
 
   // position: relative is necessary for spinner to center correctly
   embeddedHtmlRootElement.style.position = "relative";
-  const spinner = new Spinner().spin();
   embeddedHtmlRootElement.appendChild(spinner.el);
 
   const embeddedHtmlContentElement = getOrCreateElementById(
@@ -142,4 +141,5 @@ async function fetchAndRenderInto(embeddedHtmlContentElement) {
   }
 }
 
+const spinner = new Spinner().spin();
 document.addEventListener("DOMContentLoaded", main);
