@@ -1,22 +1,5 @@
 import { Spinner } from "spin.js";
 
-const spinner = new Spinner().spin();
-
-// The current script tag is always the last script tag at the time
-// of execution, so this is a way to get a reference to the current
-// script tag's parent. cf: https://stackoverflow.com/a/10312824/
-const thisScriptElement = document.scripts[document.scripts.length - 1];
-
-const lectureContentElement = document.querySelector(".lecture-content");
-
-
-const lectureAttachmentSpinnerElement = getOrCreateElementById(
-  "lecture-attachment-spinner",
-  "div",
-  lectureContentElement
-);
-lectureAttachmentSpinnerElement.appendChild(spinner.el);
-
 const isLocalhost = window.location.href.startsWith("http://localhost:");
 
 // function sleep(ms) {
@@ -24,17 +7,13 @@ const isLocalhost = window.location.href.startsWith("http://localhost:");
 // }
 
 function attachCss() {
-  const headTag = document.getElementsByTagName("head")[0];
+  const headElement = document.getElementsByTagName("head")[0];
+  const styleElement = getOrCreateElementById("embedded-html-styling", "style");
+  headElement.appendChild(styleElement);
 
-  const styleTag = getOrCreateElementById(
-    "html-embed-styling",
-    "style",
-    headTag
-  );
-
-  styleTag.type = "text/css";
-  styleTag.innerHTML = `
-      #html-embed-div figure {
+  styleElement.type = "text/css";
+  styleElement.innerHTML = `
+      #embedded-html-content figure {
         display: block;
         max-width: 80%;
         margin: auto;
@@ -42,11 +21,11 @@ function attachCss() {
         margin-block-end: 1em;
       }
 
-      #html-embed-div figcaption:before {
+      #embedded-html-content figcaption:before {
         content: "Caption: ";
       }
 
-      #html-embed-div img {
+      #embedded-html-content img {
         width: 100%;
       }
 
@@ -82,16 +61,11 @@ function attachCss() {
     `;
 }
 
-function getOrCreateElementById(
-  id,
-  tag = "div",
-  parentTag = lectureContentElement
-) {
+function getOrCreateElementById(id, tag = "div") {
   let element = document.getElementById(id);
   if (!element) {
     element = document.createElement(tag);
     element.id = id;
-    parentTag.appendChild(element);
   }
   return element;
 }
@@ -124,28 +98,48 @@ function getUrl() {
   return url;
 }
 
-function setup() {
+function main() {
   attachCss();
+  const embeddedHtmlRootElement = getOrCreateElementById("embedded-html-root");
+
+  const lectureContentElement = document.querySelector(".lecture-content");
+  const videos = document.querySelectorAll(".lecture-attachment-type-video");
+  if (videos.length === 2) {
+    lectureContentElement.insertBefore(embeddedHtmlRootElement, videos[1]);
+  } else {
+    lectureContentElement.appendChild(embeddedHtmlRootElement);
+  }
+
+  // position: relative is necessary for spinner to center correctly
+  embeddedHtmlRootElement.style.position = "relative";
+  const spinner = new Spinner().spin();
+  embeddedHtmlRootElement.appendChild(spinner.el);
+
+  const embeddedHtmlContentElement = getOrCreateElementById(
+    "embedded-html-content"
+  );
+  embeddedHtmlRootElement.appendChild(embeddedHtmlContentElement);
+
+  fetchAndRenderInto(embeddedHtmlContentElement);
 }
 
-setup();
-
-async function fetchHtmlEmbedContent() {
+async function fetchEmbeddedHtmlContent() {
   const url = getUrl();
   const response = await fetch(url);
-  const htmlEmbedContent = await response.text();
-  return htmlEmbedContent;
+  const embeddedHtmlContent = await response.text();
+  return embeddedHtmlContent;
 }
 
-(async function main() {
+async function fetchAndRenderInto(embeddedHtmlContentElement) {
   try {
-    const htmlEmbedContent = await fetchHtmlEmbedContent();
+    const embeddedHtmlContent = await fetchEmbeddedHtmlContent();
     // await sleep(5000);
-    const htmlEmbedDiv = getOrCreateElementById("html-embed-div");
-    htmlEmbedDiv.innerHTML = htmlEmbedContent;
+    embeddedHtmlContentElement.innerHTML = embeddedHtmlContent;
   } catch (e) {
     console.error(e);
   } finally {
     spinner.stop();
   }
-})();
+}
+
+document.addEventListener("DOMContentLoaded", main);
