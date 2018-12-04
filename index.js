@@ -13,6 +13,10 @@ function attachCss() {
 
   styleElement.type = "text/css";
   styleElement.innerHTML = `
+      #embedded-html-root {
+        min-height: 100px;
+      }
+
       #embedded-html-content figure {
         display: block;
         max-width: 80%;
