@@ -102,9 +102,11 @@ function getUrl() {
   return url;
 }
 
-function main() {
+function main(event) {
+  console.log({ event });
   attachCss();
   const embeddedHtmlRootElement = getOrCreateElementById("embedded-html-root");
+  embeddedHtmlRootElement.innerHTML = "";
 
   const lectureContentElement = document.querySelector(".lecture-content");
   const videos = document.querySelectorAll(".lecture-attachment-type-video");
@@ -116,6 +118,7 @@ function main() {
 
   // position: relative is necessary for spinner to center correctly
   embeddedHtmlRootElement.style.position = "relative";
+  spinner = new Spinner().spin();
   embeddedHtmlRootElement.appendChild(spinner.el);
 
   const embeddedHtmlContentElement = getOrCreateElementById(
@@ -145,5 +148,6 @@ async function fetchAndRenderInto(embeddedHtmlContentElement) {
   }
 }
 
-const spinner = new Spinner().spin();
+let spinner;
 document.addEventListener("DOMContentLoaded", main);
+document.addEventListener("lecture:change", main);
