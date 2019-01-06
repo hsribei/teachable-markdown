@@ -8,6 +8,13 @@
     </style>
   </head>
   <body>
+    <script>
+      function changeLecture() {
+        const event = new Event("lecture:change");
+        document.dispatchEvent(event);
+      }
+    </script>
+    <button onclick="changeLecture();">Change lecture</button>
     <div class="lecture-content">
       <div class="lecture-attachment-type-video">First video</div>
       <div class="lecture-attachment-type-video">Second video</div>
