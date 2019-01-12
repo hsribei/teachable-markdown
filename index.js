@@ -110,7 +110,7 @@ function main(event) {
 
   const lectureContentElement = document.querySelector(".lecture-content");
   const videos = document.querySelectorAll(".lecture-attachment-type-video");
-  if (videos.length === 2) {
+  if (videos.length >= 2) {
     lectureContentElement.insertBefore(embeddedHtmlRootElement, videos[1]);
   } else {
     lectureContentElement.appendChild(embeddedHtmlRootElement);
