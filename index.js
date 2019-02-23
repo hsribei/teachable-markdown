@@ -1,17 +1,6 @@
 import { Spinner } from "spin.js";
 
-const stripSkinTone = require("strip-skin-tone");
-const retext = require("retext");
-const emoji = require("retext-emoji");
-const fp = require("lodash/fp");
-
-const isLocalhost = false; // window.location.href.startsWith("http://localhost");
-
-const gemojify = fp.pipe(
-  stripSkinTone,
-  retext().use(emoji, { convert: "decode" }).processSync,
-  String
-);
+const isLocalhost = window.location.href.startsWith("http://localhost:");
 
 // function sleep(ms) {
 //   return new Promise(resolve => setTimeout(resolve, ms));
@@ -91,15 +80,24 @@ function getUrl() {
   if (isLocalhost) {
     url = "http://localhost:5000/full-html.html";
   } else {
-    // Example docTitle == '<title>s11e56 - A map appears 🗺 | swizec</title>'
-    const docTitle = document.title;
-    // Example sectionDirectoryName = 's11'
-    const sectionDirectoryName = docTitle.match(/^(s\d+)e/)[1];
-    // Example lectureFileName = 's11e56 - A map appears :world_map:.html'
-    const lectureFileName = encodeURIComponent(
-      gemojify(docTitle.split(/\s*\|\s*/)[0] + ".html")
-    );
-    url = `https://cdn.staticaly.com/gh/hsribei/content/master/teachable-html/${sectionDirectoryName}/${lectureFileName}?env=dev`;
+    try {
+      // const docTitle = "s01e02 - Third Lecture | test-school";
+      const docTitle = document.title;
+      const sectionDirectoryName = docTitle.match(/^(s\d+)e/)[1];
+      const lectureFileName = encodeURIComponent(
+        docTitle.split(/\s*\|\s*/)[0] + ".html"
+      );
+      url = `https://cdn.staticaly.com/gh/hsribei/content/master/teachable-html/${sectionDirectoryName}/${lectureFileName}?env=dev`;
+    } catch (e) {
+      console.log(
+        "Couldn't parse document title into URL for markdown source:",
+        {
+          docTitle: document.title
+        }
+      );
+      url =
+        "https://cdn.staticaly.com/gh/hsribei/content/master/the-new-meat.md?env=dev";
+    }
   }
   return url;
 }
