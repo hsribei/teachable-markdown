@@ -87,7 +87,7 @@ function getUrl() {
       const lectureFileName = encodeURIComponent(
         docTitle.split(/\s*\|\s*/)[0] + ".html"
       );
-      url = `https://cdn.staticaly.com/gh/hsribei/content/master/teachable-html/${sectionDirectoryName}/${lectureFileName}?env=dev`;
+      url = `https://swizec-react-dataviz-content.now.sh/teachable-html/${sectionDirectoryName}/${lectureFileName}`;
     } catch (e) {
       console.log(
         "Couldn't parse document title into URL for markdown source:",
@@ -96,7 +96,7 @@ function getUrl() {
         }
       );
       url =
-        "https://cdn.staticaly.com/gh/hsribei/content/master/the-new-meat.md?env=dev";
+        "https://swizec-react-dataviz-content.now.sh/teachable-html/s15/s15e74%20-%20Prep%20your%20app%20for%20launch.html";
     }
   }
   return url;
