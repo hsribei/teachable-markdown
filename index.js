@@ -78,7 +78,8 @@ function getUrl() {
   let url = "";
 
   if (isLocalhost) {
-    url = "http://localhost:5000/full-html.html";
+    url =
+      "http://localhost:5000/teachable-html/s00/s00e01 - What you need to know.html";
   } else {
     try {
       // const docTitle = "s01e02 - Third Lecture | test-school";
@@ -103,6 +104,11 @@ function getUrl() {
 }
 
 function main(event) {
+  // Do nothing if user is not authorized
+  if (document.querySelector(".locked")) {
+    return;
+  }
+
   console.log({ event });
   attachCss();
   const embeddedHtmlRootElement = getOrCreateElementById("embedded-html-root");
