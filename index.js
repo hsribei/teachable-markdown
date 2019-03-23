@@ -86,7 +86,7 @@ function getUrl() {
     docTitle = "s20e103 - That's it 👍🏼 | swizec";
     // docTitle = "s05e29 - 💪 | swizec";
   } else {
-    baseUrl = "http://swizec-react-dataviz-content.now.sh/teachable-html";
+    baseUrl = "https://swizec-react-dataviz-content.now.sh/teachable-html";
     // const docTitle = "s01e02 - Third Lecture | test-school";
     docTitle = document.title;
   }
