@@ -1,5 +1,7 @@
 import { Spinner } from "spin.js";
 
+import stripSkinTone from "strip-skin-tone";
+
 const isLocalhost = window.location.href.startsWith("http://localhost:");
 
 // function sleep(ms) {
@@ -75,32 +77,36 @@ function getOrCreateElementById(id, tag = "div") {
 }
 
 function getUrl() {
-  let url = "";
+  let baseUrl;
+  let contentUrl;
+  let docTitle;
 
   if (isLocalhost) {
-    url =
-      "http://localhost:5000/teachable-html/s00/s00e01 - What you need to know.html";
+    baseUrl = "http://localhost:5000/teachable-html";
+    docTitle = "s20e103 - That's it 👍🏼 | swizec";
+    // docTitle = "s05e29 - 💪 | swizec";
   } else {
-    try {
-      // const docTitle = "s01e02 - Third Lecture | test-school";
-      const docTitle = document.title;
-      const sectionDirectoryName = docTitle.match(/^(s\d+)e/)[1];
-      const lectureFileName = encodeURIComponent(
-        docTitle.split(/\s*\|\s*/)[0] + ".html"
-      );
-      url = `https://swizec-react-dataviz-content.now.sh/teachable-html/${sectionDirectoryName}/${lectureFileName}`;
-    } catch (e) {
-      console.log(
-        "Couldn't parse document title into URL for markdown source:",
-        {
-          docTitle: document.title
-        }
-      );
-      url =
-        "https://swizec-react-dataviz-content.now.sh/teachable-html/s15/s15e74%20-%20Prep%20your%20app%20for%20launch.html";
-    }
+    baseUrl = "http://swizec-react-dataviz-content.now.sh/teachable-html";
+    // const docTitle = "s01e02 - Third Lecture | test-school";
+    docTitle = document.title;
   }
-  return url;
+
+  try {
+    docTitle = stripSkinTone(docTitle);
+    const sectionDirectoryName = docTitle.match(/^(s\d+)e/)[1];
+    const lectureFileName = encodeURIComponent(
+      docTitle.split(/\s*\|\s*/)[0] + ".html"
+    );
+    contentUrl = `${baseUrl}/${sectionDirectoryName}/${lectureFileName}`;
+  } catch (e) {
+    console.log("Couldn't parse document title into URL for markdown source:", {
+      docTitle: document.title
+    });
+    contentUrl =
+      "https://swizec-react-dataviz-content.now.sh/teachable-html/s15/s15e74%20-%20Prep%20your%20app%20for%20launch.html";
+  }
+
+  return contentUrl;
 }
 
 function main(event) {
